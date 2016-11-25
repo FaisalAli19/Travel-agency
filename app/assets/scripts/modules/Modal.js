@@ -21,7 +21,7 @@ class Modal {
         if(e.keyCode == 27){
             this.closeModal();
         }
-        
+
     }
 
     openModal(){
