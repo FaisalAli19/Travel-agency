@@ -45,13 +45,13 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	__webpack_require__(7);
+	__webpack_require__(8);
 
 /***/ },
 
-/***/ 7:
+/***/ 8:
 /***/ function(module, exports) {
 
 	(function(window, factory) {
@@ -171,7 +171,7 @@
 				running = false;
 			};
 
-			var rafBatch = function(fn){
+			return function(fn){
 				if(running){
 					fn.apply(this, arguments);
 				} else {
@@ -183,10 +183,6 @@
 					}
 				}
 			};
-
-			rafBatch._lsFlush = run;
-
-			return rafBatch;
 		})();
 
 		var rAFIt = function(fn, simple){
@@ -208,7 +204,7 @@
 			var running;
 			var lastTime = 0;
 			var gDelay = 125;
-			var RIC_DEFAULT_TIMEOUT = 666;
+			var RIC_DEFAULT_TIMEOUT = 999;
 			var rICTimeout = RIC_DEFAULT_TIMEOUT;
 			var run = function(){
 				running = false;
@@ -230,7 +226,7 @@
 			return function(isPriority){
 				var delay;
 				if((isPriority = isPriority === true)){
-					rICTimeout = 44;
+					rICTimeout = 66;
 				}
 
 				if(running){
@@ -297,7 +293,7 @@
 			var currentExpand = 0;
 
 			var isLoading = 0;
-			var lowRuns = -1;
+			var lowRuns = 0;
 
 			var resetPreloading = function(e){
 				isLoading--;
@@ -347,17 +343,17 @@
 
 					if(preloadExpand == null){
 						if(!('expand' in lazySizesConfig)){
-							lazySizesConfig.expand = docElem.clientHeight > 500 && docElem.clientWidth > 500 ? 500 : 370;
+							lazySizesConfig.expand = docElem.clientHeight > 500 ? 500 : 400;
 						}
 
 						defaultExpand = lazySizesConfig.expand;
 						preloadExpand = defaultExpand * lazySizesConfig.expFactor;
 					}
 
-					if(currentExpand < preloadExpand && isLoading < 1 && lowRuns > 2 && loadMode > 2 && !document.hidden){
+					if(currentExpand < preloadExpand && isLoading < 1 && lowRuns > 3 && loadMode > 2){
 						currentExpand = preloadExpand;
 						lowRuns = 0;
-					} else if(loadMode > 1 && lowRuns > 1 && isLoading < 6){
+					} else if(loadMode > 1 && lowRuns > 2 && isLoading < 6){
 						currentExpand = defaultExpand;
 					} else {
 						currentExpand = shrinkExpand;
@@ -599,11 +595,7 @@
 						setTimeout(onload, 20000);
 					}
 
-					if(lazyloadElems.length){
-						checkElements();
-					} else {
-						throttledCheckElements();
-					}
+					throttledCheckElements(lazyloadElems.length > 0);
 				},
 				checkElems: throttledCheckElements,
 				unveil: unveilElement
